@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="author" content="刘志飞">
+    <title>飞机大战</title>
+</head>
+<body>
+<!--loading-->
+<section id="loading">
+    <div class="loader loader-1">
+        <div class="loader-outter"></div>
+        <div class="loader-inner"></div>
+    </div>
+    <p class="loading-info">资源加载中 <span class="progress">0</span> %</p>
+</section>
+<!--game-->
+<div class="container">
+    <!--背景-->
+    <div id="background"></div>
+    <!--菜单-->
+    <div id="menu">
+        <!--机型-->
+        <ul class="planeType">
+            <li class="active">
+                <img src="src/img/plane/plane_0.png" data-type="0" alt="">
+            </li>
+            <li>
+                <img src="src/img/plane/plane_1.png" data-type="1" alt="">
+            </li>
+            <li>
+                <img src="src/img/plane/plane_2.png" data-type="2" alt="">
+            </li>
+        </ul>
+        <ul class="planeType">
+            <li>
+                <img src="src/img/plane/plane_3.png" data-type="3" alt="">
+            </li>
+            <li>
+                <img src="src/img/plane/plane_4.png" data-type="4" alt="">
+            </li>
+            <li>
+                <img src="src/img/plane/plane_5.png" data-type="5" alt="">
+            </li>
+        </ul>
+        <!--开始-->
+        <div class="start">
+            <img src="src/img/info/start.png" alt="">
+        </div>
+    </div>
+    <!--游戏-->
+    <canvas id="game" width="1440" height="705"></canvas>
+</div>
+</body>
+</html>
