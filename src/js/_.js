@@ -154,8 +154,7 @@ const _ = {
     //返回详细类型
     getType(target) {
         let str = Object.prototype.toString.call(target)
-        let type = str.slice(8, -1).toLowerCase().trim()
-        return type
+        return str.slice(8, -1).toLowerCase().trim()
     },
     //简单深拷贝    (循环引用问题未解决)
     deepCopy(source) {

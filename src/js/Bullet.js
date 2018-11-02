@@ -12,7 +12,7 @@ class Bullet extends EventListener {
     constructor(options) {
         super()
 
-        this.checkOptions(options)
+        Bullet.checkOptions(options)
 
         let defaultOptions = {
             x: 0,                   //位置  中心点
@@ -57,24 +57,26 @@ class Bullet extends EventListener {
 
     }
 
-    checkOptions(options) {
+    static checkOptions(options) {
         let key = ''
         switch (undefined) {
             case options.img:
                 throw new Error('img is undefined')
-                break
             case options.img.src:
                 key = 'img.src'
+                break
             case options.width:
                 key = 'width'
+                break
             case options.height:
                 key = 'height'
+                break
             case options.damage:
                 key = 'damage'
+                break
             case options.holder:
                 key = 'holder'
                 throw new Error(`${key}  is undefined`)
-                break
         }
     }
 
@@ -290,12 +292,11 @@ Bullet.type = (function () {
             type.push(bullet)
             return id
         },
-        get (id) {
+        get(id) {
             if (id >= type.length) {
                 throw new Error('undefined plane')
             } else {
-                let bullet = _.deepCopy(type[id])
-                return bullet
+                return _.deepCopy(type[id])
             }
         }
     }

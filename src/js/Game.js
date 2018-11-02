@@ -21,7 +21,7 @@ import Bullet from './Bullet.js'
 class Game extends EventListener {
     constructor(options) {
         super()
-        this.checkOptions(options)
+        Game.checkOptions(options)
 
         let defaultOptions = {
             width: window.innerWidth,
@@ -41,7 +41,7 @@ class Game extends EventListener {
         this.init()
     }
 
-    checkOptions(options) {
+    static checkOptions(options) {
         if (!options.canvas || options.canvas.nodeName !== 'CANVAS') {
             throw new Error('canvas is undefined')
         }
@@ -173,20 +173,10 @@ class Game extends EventListener {
         let playerArray = this.planeSystem.players
         let coordinate = {x: 0, y: 0}
         //是否超出视图 返回true超出
-        let x_BeyondView = (data) => {
-            if (data.x <= this.width / 2 &&
-                data.x >= -this.width / 2) {
-                return false;
-            }
-            return true;
-        }
-        let y_BeyondView = (data) => {
-            if (data.y <= this.height / 2 &&
-                data.y >= -this.height / 2) {
-                return false;
-            }
-            return true;
-        }
+        let x_BeyondView = (data) => !(data.x <= this.width / 2 &&
+            data.x >= -this.width / 2)
+        let y_BeyondView = (data) => !(data.y <= this.height / 2 &&
+            data.y >= -this.height / 2)
 
         let touch = {
             start: (e) => {
@@ -432,15 +422,11 @@ class Game extends EventListener {
         //-     +
         //   +
         //是否超出视图 true超出
-        let beyondView = (data) => {
-            if (data.x <= this.width / 2 + 100 &&
-                data.x >= -this.width / 2 - 100 &&
-                data.y <= this.height / 2 + 100 &&
-                data.y >= -this.height / 2 - 100) {
-                return false;
-            }
-            return true;
-        }
+
+        let beyondView = (data) => !(data.x <= this.width / 2 + 100
+            && data.x >= -this.width / 2 - 100
+            && data.y <= this.height / 2 + 100
+            && data.y >= -this.height / 2 - 100)
 
         //碰撞区域
         //将碰撞区域的坐标修正为下图  且将定位修正为相对于画布
@@ -534,11 +520,41 @@ class Game extends EventListener {
                 50: () => {
                     player = this.planeSystem.players[0]
                     let enemies = [
-                        enemy(get('plane', {id: 11, x: -164, y: -500, direction: 1, rotateDeg: 180})).weaponSystem.continuousShoot(2000),
-                        enemy(get('plane', {id: 11, x: -82, y: -450, direction: 1, rotateDeg: 180})).weaponSystem.continuousShoot(2000),
-                        enemy(get('plane', {id: 11, x: 0, y: -400, direction: 1, rotateDeg: 180})).weaponSystem.continuousShoot(2000),
-                        enemy(get('plane', {id: 11, x: 82, y: -450, direction: 1, rotateDeg: 180})).weaponSystem.continuousShoot(2000),
-                        enemy(get('plane', {id: 11, x: 164, y: -500, direction: 1, rotateDeg: 180})).weaponSystem.continuousShoot(2000),
+                        enemy(get('plane', {
+                            id: 11,
+                            x: -164,
+                            y: -500,
+                            direction: 1,
+                            rotateDeg: 180
+                        })).weaponSystem.continuousShoot(2000),
+                        enemy(get('plane', {
+                            id: 11,
+                            x: -82,
+                            y: -450,
+                            direction: 1,
+                            rotateDeg: 180
+                        })).weaponSystem.continuousShoot(2000),
+                        enemy(get('plane', {
+                            id: 11,
+                            x: 0,
+                            y: -400,
+                            direction: 1,
+                            rotateDeg: 180
+                        })).weaponSystem.continuousShoot(2000),
+                        enemy(get('plane', {
+                            id: 11,
+                            x: 82,
+                            y: -450,
+                            direction: 1,
+                            rotateDeg: 180
+                        })).weaponSystem.continuousShoot(2000),
+                        enemy(get('plane', {
+                            id: 11,
+                            x: 164,
+                            y: -500,
+                            direction: 1,
+                            rotateDeg: 180
+                        })).weaponSystem.continuousShoot(2000),
                     ]
                     let fn = () => {
                         _.forEach(enemies, (enemy) => {
@@ -551,11 +567,18 @@ class Game extends EventListener {
                     allDie(enemies, () => remove(fn))
                     draw(fn)
                 },
-                450: () => {
+                //第二关
+                250: () => {
                     let enemies = []
                     for (let i = 0; i < 6; i++) {
                         setTimeout(() => {
-                            enemies.push(enemy(get('plane', {id: 11, x: -300, y: -400, direction: 1, rotateDeg: 180})).weaponSystem.continuousShoot(2000))
+                            enemies.push(enemy(get('plane', {
+                                id: 11,
+                                x: -300,
+                                y: -400,
+                                direction: 1,
+                                rotateDeg: 180
+                            })).weaponSystem.continuousShoot(2000))
                         }, i * 2000)
                     }
                     _.forEach(this.planeSystem.players, (plane) => {
@@ -569,7 +592,7 @@ class Game extends EventListener {
                             enemy.y += 2
                             //显示武器升级
                             if (++i < 70) {
-                                this.brushSystem.drawImage('src/img/info/info.png', ({width, height}) => {
+                                this.brushSystem.drawImage('src/img/info/info.png', () => {
                                     return [5, 3, 124, 30, player.x - player.width / 2, player.y - i, 124, 30]
                                 })
                             }
@@ -581,13 +604,44 @@ class Game extends EventListener {
                     allDie(enemies, () => remove(fn))
                     draw(fn)
                 },
-                850: () => {
+                //第三关
+                450: () => {
                     let enemies = [
-                        enemy(get('plane', {id: 6, x: -164, y: -500, direction: 1, rotateDeg: 180})).weaponSystem.continuousShoot(2000),
-                        enemy(get('plane', {id: 6, x: -82, y: -450, direction: 1, rotateDeg: 180})).weaponSystem.continuousShoot(2000),
-                        enemy(get('plane', {id: 6, x: 0, y: -400, direction: 1, rotateDeg: 180})).weaponSystem.continuousShoot(2000),
-                        enemy(get('plane', {id: 6, x: 82, y: -450, direction: 1, rotateDeg: 180})).weaponSystem.continuousShoot(2000),
-                        enemy(get('plane', {id: 6, x: 164, y: -500, direction: 1, rotateDeg: 180})).weaponSystem.continuousShoot(2000),
+                        enemy(get('plane', {
+                            id: 6,
+                            x: -164,
+                            y: -500,
+                            direction: 1,
+                            rotateDeg: 180
+                        })).weaponSystem.continuousShoot(2000),
+                        enemy(get('plane', {
+                            id: 6,
+                            x: -82,
+                            y: -450,
+                            direction: 1,
+                            rotateDeg: 180
+                        })).weaponSystem.continuousShoot(2000),
+                        enemy(get('plane', {
+                            id: 6,
+                            x: 0,
+                            y: -400,
+                            direction: 1,
+                            rotateDeg: 180
+                        })).weaponSystem.continuousShoot(2000),
+                        enemy(get('plane', {
+                            id: 6,
+                            x: 82,
+                            y: -450,
+                            direction: 1,
+                            rotateDeg: 180
+                        })).weaponSystem.continuousShoot(2000),
+                        enemy(get('plane', {
+                            id: 6,
+                            x: 164,
+                            y: -500,
+                            direction: 1,
+                            rotateDeg: 180
+                        })).weaponSystem.continuousShoot(2000),
                     ]
                     let fn = () => {
                         _.forEach(enemies, (enemy) => {
@@ -600,11 +654,18 @@ class Game extends EventListener {
                     allDie(enemies, () => remove(fn))
                     draw(fn)
                 },
-                1250: () => {
+                //第四关
+                650: () => {
                     let enemies = []
                     for (let i = 0; i < 6; i++) {
                         setTimeout(() => {
-                            enemies.push(enemy(get('plane', {id: 11, x: 300, y: -400, direction: 1, rotateDeg: 180})).weaponSystem.continuousShoot(2000))
+                            enemies.push(enemy(get('plane', {
+                                id: 11,
+                                x: 300,
+                                y: -400,
+                                direction: 1,
+                                rotateDeg: 180
+                            })).weaponSystem.continuousShoot(2000))
                         }, i * 2000)
                     }
                     let i = 0
@@ -627,7 +688,7 @@ class Game extends EventListener {
                             enemy.x--
                             enemy.y += 2
                             if (++i < 70) {
-                                this.brushSystem.drawImage('src/img/info/info.png', ({width, height}) => {
+                                this.brushSystem.drawImage('src/img/info/info.png', () => {
                                     return [5, 3, 124, 30, player.x - player.width / 2, player.y - i, 124, 30]
                                 })
                             }
@@ -639,11 +700,20 @@ class Game extends EventListener {
                     allDie(enemies, () => remove(fn))
                     draw(fn)
                 },
-                1650: () => {
+                //第四关
+                950: () => {
                     let enemies = []
                     for (let i = 0; i < 6; i++) {
                         setTimeout(() => {
-                            enemies.push(enemy(get('plane', {id: 14, arsenal: [3], hp: 100, x: -300, y: -400, direction: 1, rotateDeg: 180})).weaponSystem.continuousShoot(2000))
+                            enemies.push(enemy(get('plane', {
+                                id: 14,
+                                arsenal: [3],
+                                hp: 100,
+                                x: -300,
+                                y: -400,
+                                direction: 1,
+                                rotateDeg: 180
+                            })).weaponSystem.continuousShoot(2000))
                         }, i * 2000)
                     }
                     _.forEach(this.planeSystem.players, (plane) => {
@@ -658,7 +728,7 @@ class Game extends EventListener {
                             enemy.y += 2
                             //显示武器升级
                             if (++i < 70) {
-                                this.brushSystem.drawImage('src/img/info/info.png', ({width, height}) => {
+                                this.brushSystem.drawImage('src/img/info/info.png', () => {
                                     return [5, 3, 124, 30, o.x - o.width / 2, o.y - i, 124, 30]
                                 })
                             }
@@ -670,10 +740,19 @@ class Game extends EventListener {
                     allDie(enemies, () => remove(fn))
                     draw(fn)
                 },
-                2050: () => {
+                //第五关
+                1350: () => {
                     let enemies = []
                     for (let i = 0; i < 10; i++) {
-                        enemies.push(enemy(get('plane', {id: 7, scale: 0.6, arsenal: [2], x: (i % 5) * 90 - 180, y: i >= 5 ? -400 : -300, direction: 1, rotateDeg: 180})).weaponSystem.continuousShoot(2000))
+                        enemies.push(enemy(get('plane', {
+                            id: 7,
+                            scale: 0.6,
+                            arsenal: [2],
+                            x: (i % 5) * 90 - 180,
+                            y: i >= 5 ? -400 : -300,
+                            direction: 1,
+                            rotateDeg: 180
+                        })).weaponSystem.continuousShoot(2000))
                     }
 
                     let fn = () => {
@@ -687,11 +766,17 @@ class Game extends EventListener {
                     allDie(enemies, () => remove(fn))
                     draw(fn)
                 },
-                2650: () => {
+                1650: () => {
                     let enemies = []
                     for (let i = 0; i < 6; i++) {
                         setTimeout(() => {
-                            enemies.push(enemy(get('plane', {id: 11, x: -300, y: -400, direction: 1, rotateDeg: 180})).weaponSystem.continuousShoot(2000))
+                            enemies.push(enemy(get('plane', {
+                                id: 11,
+                                x: -300,
+                                y: -400,
+                                direction: 1,
+                                rotateDeg: 180
+                            })).weaponSystem.continuousShoot(2000))
                         }, i * 2000)
                     }
                     let fn = () => {
@@ -706,10 +791,17 @@ class Game extends EventListener {
                     allDie(enemies, () => remove(fn))
                     draw(fn)
                 },
-                3050: () => {
+                2000: () => {
                     let enemies = []
                     for (let i = 0; i < 10; i++) {
-                        enemies.push(enemy(get('plane', {id: 9, scale: 0.3, x: (i % 5) * 90 - 180, y: i >= 5 ? -500 : -400, direction: 1, rotateDeg: 180})).weaponSystem.continuousShoot(2000))
+                        enemies.push(enemy(get('plane', {
+                            id: 9,
+                            scale: 0.3,
+                            x: (i % 5) * 90 - 180,
+                            y: i >= 5 ? -500 : -400,
+                            direction: 1,
+                            rotateDeg: 180
+                        })).weaponSystem.continuousShoot(2000))
                     }
                     let fn = () => {
                         _.forEach(enemies, (enemy) => {
@@ -722,13 +814,43 @@ class Game extends EventListener {
                     allDie(enemies, () => remove(fn))
                     draw(fn)
                 },
-                3750: () => {
+                2350: () => {
                     let enemies = [
-                        enemy(get('plane', {id: 11, x: -164, y: -500, direction: 1, rotateDeg: 180})).weaponSystem.continuousShoot(2000),
-                        enemy(get('plane', {id: 11, x: -82, y: -450, direction: 1, rotateDeg: 180})).weaponSystem.continuousShoot(2000),
-                        enemy(get('plane', {id: 11, x: 0, y: -400, direction: 1, rotateDeg: 180})).weaponSystem.continuousShoot(2000),
-                        enemy(get('plane', {id: 11, x: 82, y: -450, direction: 1, rotateDeg: 180})).weaponSystem.continuousShoot(2000),
-                        enemy(get('plane', {id: 11, x: 164, y: -500, direction: 1, rotateDeg: 180})).weaponSystem.continuousShoot(2000),
+                        enemy(get('plane', {
+                            id: 11,
+                            x: -164,
+                            y: -500,
+                            direction: 1,
+                            rotateDeg: 180
+                        })).weaponSystem.continuousShoot(2000),
+                        enemy(get('plane', {
+                            id: 11,
+                            x: -82,
+                            y: -450,
+                            direction: 1,
+                            rotateDeg: 180
+                        })).weaponSystem.continuousShoot(2000),
+                        enemy(get('plane', {
+                            id: 11,
+                            x: 0,
+                            y: -400,
+                            direction: 1,
+                            rotateDeg: 180
+                        })).weaponSystem.continuousShoot(2000),
+                        enemy(get('plane', {
+                            id: 11,
+                            x: 82,
+                            y: -450,
+                            direction: 1,
+                            rotateDeg: 180
+                        })).weaponSystem.continuousShoot(2000),
+                        enemy(get('plane', {
+                            id: 11,
+                            x: 164,
+                            y: -500,
+                            direction: 1,
+                            rotateDeg: 180
+                        })).weaponSystem.continuousShoot(2000),
                     ]
                     let fn = () => {
                         _.forEach(enemies, (enemy) => {
@@ -741,11 +863,17 @@ class Game extends EventListener {
                     allDie(enemies, () => remove(fn))
                     draw(fn)
                 },
-                4150: () => {
+                2650: () => {
                     let enemies = []
                     for (let i = 0; i < 6; i++) {
                         setTimeout(() => {
-                            enemies.push(enemy(get('plane', {id: 11, x: 300, y: -400, direction: 1, rotateDeg: 180})).weaponSystem.continuousShoot(2000))
+                            enemies.push(enemy(get('plane', {
+                                id: 11,
+                                x: 300,
+                                y: -400,
+                                direction: 1,
+                                rotateDeg: 180
+                            })).weaponSystem.continuousShoot(2000))
                         }, i * 2000)
                     }
 
@@ -761,11 +889,17 @@ class Game extends EventListener {
                     allDie(enemies, () => remove(fn))
                     draw(fn)
                 },
-                4500: () => {
+                2900: () => {
                     let enemies = []
                     for (let i = 0; i < 6; i++) {
                         setTimeout(() => {
-                            enemies.push(enemy(get('plane', {id: 11, x: -300, y: -400, direction: 1, rotateDeg: 180})).weaponSystem.continuousShoot(2000))
+                            enemies.push(enemy(get('plane', {
+                                id: 11,
+                                x: -300,
+                                y: -400,
+                                direction: 1,
+                                rotateDeg: 180
+                            })).weaponSystem.continuousShoot(2000))
                         }, i * 2000)
                     }
                     let fn = () => {
@@ -780,7 +914,7 @@ class Game extends EventListener {
                     allDie(enemies, () => remove(fn))
                     draw(fn)
                 },
-                4900: () => {
+                3200: () => {
                     let boss = enemy(get('plane', {
                         id: 5, hp: 8000, hoBar: true, x: 0, y: -400, direction: 1, rotateDeg: 180,
                         collisionArea: [{
@@ -849,13 +983,13 @@ class Game extends EventListener {
             start: () => {
                 if (levelSystem.status === 'stop') {
                     Brush.render.add(levelFn)
-                    levelSystem.status === 'start'
+                    levelSystem.status = 'start'
                 }
             },
             stop: () => {
                 if (levelSystem.status === 'start') {
                     Brush.render.remove(levelFn)
-                    levelSystem.status === 'stop'
+                    levelSystem.status = 'stop'
                 }
             },
             //  关卡(第几关), 距离(飞行多长距离) , 执行函数

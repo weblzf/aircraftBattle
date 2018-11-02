@@ -192,18 +192,17 @@ Brush.render = (function () {
             })
         },
         start() {
-            if (Brush.render.status === 'stop') {
-                function frameFn() {
-                    _.forEach(allRenderCallback, (callback) => callback && callback())
-
-                    timer = requestAnimationFrame(frameFn)
-                    if (allRenderCallback.length === 0) {
-                        render.stop()
-                    }
-                }
+            function frameFn() {
+                _.forEach(allRenderCallback, (callback) => callback && callback())
 
                 timer = requestAnimationFrame(frameFn)
+                if (allRenderCallback.length === 0) {
+                    render.stop()
+                }
+            }
 
+            if (Brush.render.status === 'stop') {
+                timer = requestAnimationFrame(frameFn)
                 Brush.render.status = 'start'
             }
         },

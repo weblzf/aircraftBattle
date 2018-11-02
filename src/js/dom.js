@@ -1,7 +1,8 @@
 import _ from './_.js'
+
 const dom = {
     on(element, eventType, selector, fn) {
-        let eventTypeArr = _.getType(eventType) === 'array' ? eventType : [eventType]
+        let eventTypeArr = 'array' === _.getType(eventType) ? eventType : [eventType]
         _.forEach(eventTypeArr, (eventType) => {
             element.addEventListener(eventType, function (e) {
                 let el = e.target;
